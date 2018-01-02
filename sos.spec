@@ -4,14 +4,13 @@
 #
 Name     : sos
 Version  : 3.5
-Release  : 3
+Release  : 4
 URL      : https://github.com/sosreport/sos/archive/3.5.tar.gz
 Source0  : https://github.com/sosreport/sos/archive/3.5.tar.gz
 Summary  : A set of tools to gather troubleshooting information from a system
 Group    : Development/Tools
 License  : GPL-2.0 GPL-2.0+
 Requires: sos-bin
-Requires: sos-legacypython
 Requires: sos-python3
 Requires: sos-locales
 Requires: sos-doc
@@ -44,15 +43,6 @@ Group: Documentation
 doc components for the sos package.
 
 
-%package legacypython
-Summary: legacypython components for the sos package.
-Group: Default
-Requires: python-core
-
-%description legacypython
-legacypython components for the sos package.
-
-
 %package locales
 Summary: locales components for the sos package.
 Group: Default
@@ -64,7 +54,6 @@ locales components for the sos package.
 %package python
 Summary: python components for the sos package.
 Group: Default
-Requires: sos-legacypython
 Requires: sos-python3
 
 %description python
@@ -88,15 +77,12 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1514919932
-python2 setup.py build -b py2
+export SOURCE_DATE_EPOCH=1514920007
 python3 setup.py build -b py3
 
 %install
-export SOURCE_DATE_EPOCH=1514919932
 rm -rf %{buildroot}
-python2 -tt setup.py build -b py2 install --root=%{buildroot} --force
-python3 -tt setup.py build -b py3 install --root=%{buildroot} --force
+python3 -tt setup.py build -b py3 install --root=%{buildroot}
 echo ----[ mark ]----
 cat %{buildroot}/usr/lib/python3*/site-packages/*/requires.txt || :
 echo ----[ mark ]----
@@ -113,10 +99,6 @@ echo ----[ mark ]----
 %defattr(-,root,root,-)
 %doc /usr/share/man/man1/*
 %doc /usr/share/man/man5/*
-
-%files legacypython
-%defattr(-,root,root,-)
-/usr/lib/python2*/*
 
 %files python
 %defattr(-,root,root,-)
