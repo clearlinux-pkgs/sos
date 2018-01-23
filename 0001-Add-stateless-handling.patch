@@ -1,0 +1,46 @@
+From 525f718205a9d38ea4179c9a73ad0c8a7e683dbe Mon Sep 17 00:00:00 2001
+From: William Douglas <william.douglas@intel.com>
+Date: Tue, 23 Jan 2018 19:22:35 +0000
+Subject: [PATCH] Add stateless handling
+
+Allow sos to fallback to the system directory for its configuration
+file if the user configuration file does not exist. Also add support
+to pull off Clear Linux configuration files from their stateless
+locations.
+---
+ sos/plugins/general.py | 2 ++
+ sos/sosreport.py       | 5 ++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/sos/plugins/general.py b/sos/plugins/general.py
+index 6809e28..ef17f0d 100644
+--- a/sos/plugins/general.py
++++ b/sos/plugins/general.py
+@@ -23,6 +23,8 @@ class General(Plugin):
+ 
+     def setup(self):
+         self.add_copy_spec([
++            "/usr/lib/os-release",
++            "/usr/share/defaults/sos/sos.conf",
+             "/etc/sos.conf",
+             "/etc/sysconfig",
+             "/proc/stat",
+diff --git a/sos/sosreport.py b/sos/sosreport.py
+index 75c5bd6..ed96cf4 100644
+--- a/sos/sosreport.py
++++ b/sos/sosreport.py
+@@ -828,7 +828,10 @@ class SoSReport(object):
+         if self.opts.config_file:
+             config_file = self.opts.config_file
+         else:
+-            config_file = '/etc/sos.conf'
++            if os.path.isfile('/etc/sos.conf'):
++                config_file = '/etc/sos.conf'
++            else:
++                config_file = '/usr/share/defaults/sos/sos.conf'
+ 
+         try:
+             try:
+-- 
+2.15.1
+

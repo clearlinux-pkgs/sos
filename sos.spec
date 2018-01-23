@@ -4,7 +4,7 @@
 #
 Name     : sos
 Version  : 3.5
-Release  : 4
+Release  : 5
 URL      : https://github.com/sosreport/sos/archive/3.5.tar.gz
 Source0  : https://github.com/sosreport/sos/archive/3.5.tar.gz
 Summary  : A set of tools to gather troubleshooting information from a system
@@ -12,6 +12,7 @@ Group    : Development/Tools
 License  : GPL-2.0 GPL-2.0+
 Requires: sos-bin
 Requires: sos-python3
+Requires: sos-data
 Requires: sos-locales
 Requires: sos-doc
 Requires: sos-python
@@ -20,6 +21,7 @@ BuildRequires : pip
 BuildRequires : python-dev
 BuildRequires : python3-dev
 BuildRequires : setuptools
+Patch1: 0001-Add-stateless-handling.patch
 
 %description
 Sos is a set of tools that gathers information about system
@@ -30,9 +32,18 @@ support technicians and developers.
 %package bin
 Summary: bin components for the sos package.
 Group: Binaries
+Requires: sos-data
 
 %description bin
 bin components for the sos package.
+
+
+%package data
+Summary: data components for the sos package.
+Group: Data
+
+%description data
+data components for the sos package.
 
 
 %package doc
@@ -71,13 +82,14 @@ python3 components for the sos package.
 
 %prep
 %setup -q -n sos-3.5
+%patch1 -p1
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1514920007
+export SOURCE_DATE_EPOCH=1516735497
 python3 setup.py build -b py3
 
 %install
@@ -87,6 +99,9 @@ echo ----[ mark ]----
 cat %{buildroot}/usr/lib/python3*/site-packages/*/requires.txt || :
 echo ----[ mark ]----
 %find_lang sos
+## make_install_append content
+install -D sos.conf %{buildroot}/usr/share/defaults/sos/sos.conf
+## make_install_append end
 
 %files
 %defattr(-,root,root,-)
@@ -94,6 +109,10 @@ echo ----[ mark ]----
 %files bin
 %defattr(-,root,root,-)
 /usr/bin/sosreport
+
+%files data
+%defattr(-,root,root,-)
+/usr/share/defaults/sos/sos.conf
 
 %files doc
 %defattr(-,root,root,-)
