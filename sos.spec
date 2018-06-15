@@ -18,7 +18,7 @@ Requires: sos-doc
 Requires: sos-python
 BuildRequires : pbr
 BuildRequires : pip
-BuildRequires : python-dev
+
 BuildRequires : python3-dev
 BuildRequires : setuptools
 Patch1: 0001-Add-stateless-handling.patch
