@@ -4,7 +4,7 @@
 #
 Name     : sos
 Version  : 3.5
-Release  : 13
+Release  : 14
 URL      : https://github.com/sosreport/sos/archive/3.5.tar.gz
 Source0  : https://github.com/sosreport/sos/archive/3.5.tar.gz
 Summary  : A set of tools to gather troubleshooting information from a system
