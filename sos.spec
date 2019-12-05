@@ -4,7 +4,7 @@
 #
 Name     : sos
 Version  : 3.8
-Release  : 18
+Release  : 19
 URL      : https://github.com/sosreport/sos/archive/3.8.tar.gz
 Source0  : https://github.com/sosreport/sos/archive/3.8.tar.gz
 Summary  : A set of tools to gather troubleshooting information from a system
