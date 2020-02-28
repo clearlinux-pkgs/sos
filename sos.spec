@@ -4,10 +4,10 @@
 #
 Name     : sos
 Version  : 3.8
-Release  : 20
+Release  : 21
 URL      : https://github.com/sosreport/sos/archive/3.8.tar.gz
 Source0  : https://github.com/sosreport/sos/archive/3.8.tar.gz
-Summary  : A set of tools to gather troubleshooting information from a system
+Summary  : A unified tool for collecting system logs and other debug information
 Group    : Development/Tools
 License  : GPL-2.0 GPL-2.0+
 Requires: sos-bin = %{version}-%{release}
@@ -104,7 +104,8 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1573110671
+export SOURCE_DATE_EPOCH=1582920816
+# -Werror is for werrorists
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$CFLAGS -fno-lto "
