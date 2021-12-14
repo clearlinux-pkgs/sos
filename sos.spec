@@ -4,7 +4,7 @@
 #
 Name     : sos
 Version  : 3.8
-Release  : 33
+Release  : 34
 URL      : https://github.com/sosreport/sos/archive/3.8.tar.gz
 Source0  : https://github.com/sosreport/sos/archive/3.8.tar.gz
 Summary  : A unified tool for collecting system logs and other debug information
