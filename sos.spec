@@ -4,7 +4,7 @@
 #
 Name     : sos
 Version  : 3.8
-Release  : 36
+Release  : 38
 URL      : https://github.com/sosreport/sos/archive/3.8.tar.gz
 Source0  : https://github.com/sosreport/sos/archive/3.8.tar.gz
 Summary  : Script of Scripts (SoS): an interactive, cross-platform, and cross-language workflow system for reproducible data analysis
@@ -100,7 +100,6 @@ Requires: pypi(pygments)
 Requires: pypi(pyyaml)
 Requires: pypi(pyzmq)
 Requires: pypi(tqdm)
-Requires: pypi(xxhash)
 
 %description python3
 python3 components for the sos package.
@@ -116,7 +115,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1641864893
+export SOURCE_DATE_EPOCH=1641866334
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$FFLAGS -fno-lto "
