@@ -4,10 +4,10 @@
 #
 Name     : sos
 Version  : 3.8
-Release  : 34
+Release  : 36
 URL      : https://github.com/sosreport/sos/archive/3.8.tar.gz
 Source0  : https://github.com/sosreport/sos/archive/3.8.tar.gz
-Summary  : A unified tool for collecting system logs and other debug information
+Summary  : Script of Scripts (SoS): an interactive, cross-platform, and cross-language workflow system for reproducible data analysis
 Group    : Development/Tools
 License  : GPL-2.0 GPL-2.0+
 Requires: sos-bin = %{version}-%{release}
@@ -17,15 +17,12 @@ Requires: sos-locales = %{version}-%{release}
 Requires: sos-man = %{version}-%{release}
 Requires: sos-python = %{version}-%{release}
 Requires: sos-python3 = %{version}-%{release}
-Requires: Sphinx
-Requires: coverage
-Requires: nose
-Requires: pycodestyle
-BuildRequires : Sphinx
 BuildRequires : buildreq-distutils3
-BuildRequires : coverage
-BuildRequires : nose
-BuildRequires : pycodestyle
+BuildRequires : pypi(coverage)
+BuildRequires : pypi(nose)
+BuildRequires : pypi(pycodestyle)
+BuildRequires : pypi(sphinx)
+BuildRequires : pypi-six
 Patch1: 0001-Add-stateless-handling.patch
 
 %description
@@ -89,6 +86,21 @@ python components for the sos package.
 Summary: python3 components for the sos package.
 Group: Default
 Requires: python3-core
+Provides: pypi(sos)
+Requires: pypi(fasteners)
+Requires: pypi(jinja2)
+Requires: pypi(nbformat)
+Requires: pypi(networkx)
+Requires: pypi(pexpect)
+Requires: pypi(psutil)
+Requires: pypi(ptyprocess)
+Requires: pypi(pydot)
+Requires: pypi(pydotplus)
+Requires: pypi(pygments)
+Requires: pypi(pyyaml)
+Requires: pypi(pyzmq)
+Requires: pypi(tqdm)
+Requires: pypi(xxhash)
 
 %description python3
 python3 components for the sos package.
@@ -104,12 +116,11 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1582920816
-# -Werror is for werrorists
+export SOURCE_DATE_EPOCH=1641864893
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
-export FCFLAGS="$CFLAGS -fno-lto "
-export FFLAGS="$CFLAGS -fno-lto "
+export FCFLAGS="$FFLAGS -fno-lto "
+export FFLAGS="$FFLAGS -fno-lto "
 export CXXFLAGS="$CXXFLAGS -fno-lto "
 export MAKEFLAGS=%{?_smp_mflags}
 python3 setup.py build
