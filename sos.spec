@@ -4,7 +4,7 @@
 #
 Name     : sos
 Version  : 3.8
-Release  : 38
+Release  : 39
 URL      : https://github.com/sosreport/sos/archive/3.8.tar.gz
 Source0  : https://github.com/sosreport/sos/archive/3.8.tar.gz
 Summary  : Script of Scripts (SoS): an interactive, cross-platform, and cross-language workflow system for reproducible data analysis
@@ -99,6 +99,7 @@ Requires: pypi(pydotplus)
 Requires: pypi(pygments)
 Requires: pypi(pyyaml)
 Requires: pypi(pyzmq)
+Requires: pypi(six)
 Requires: pypi(tqdm)
 
 %description python3
@@ -109,13 +110,16 @@ python3 components for the sos package.
 %setup -q -n sos-3.8
 cd %{_builddir}/sos-3.8
 %patch1 -p1
+pushd ..
+cp -a sos-3.8 buildavx2
+popd
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1641866334
+export SOURCE_DATE_EPOCH=1658940764
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$FFLAGS -fno-lto "
@@ -124,19 +128,37 @@ export CXXFLAGS="$CXXFLAGS -fno-lto "
 export MAKEFLAGS=%{?_smp_mflags}
 python3 setup.py build
 
+pushd ../buildavx2/
+export CFLAGS="$CFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export FFLAGS="$FFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export FCFLAGS="$FCFLAGS -m64 -march=x86-64-v3 "
+export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3 "
+python3 setup.py build
+
+popd
 %install
 export MAKEFLAGS=%{?_smp_mflags}
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/sos
-cp %{_builddir}/sos-3.8/LICENSE %{buildroot}/usr/share/package-licenses/sos/1f199f2dcc0341653fc919334d9c26d0d2098f93
+cp %{_builddir}/sos-%{version}/LICENSE %{buildroot}/usr/share/package-licenses/sos/1f199f2dcc0341653fc919334d9c26d0d2098f93
 python3 -tt setup.py build  install --root=%{buildroot}
 echo ----[ mark ]----
 cat %{buildroot}/usr/lib/python3*/site-packages/*/requires.txt || :
 echo ----[ mark ]----
+pushd ../buildavx2/
+export CFLAGS="$CFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export FFLAGS="$FFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export FCFLAGS="$FCFLAGS -m64 -march=x86-64-v3 "
+export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3 "
+python3 -tt setup.py build install --root=%{buildroot}-v3
+popd
 %find_lang sos
 ## install_append content
 install -D sos.conf %{buildroot}/usr/share/defaults/sos/sos.conf
 ## install_append end
+/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 
 %files
 %defattr(-,root,root,-)
