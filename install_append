@@ -1,1 +1,0 @@
-install -D sos.conf %{buildroot}/usr/share/defaults/sos/sos.conf
