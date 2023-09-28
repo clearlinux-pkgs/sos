@@ -4,30 +4,29 @@
 # Using build pattern: distutils3
 #
 Name     : sos
-Version  : 3.8
-Release  : 44
-URL      : https://github.com/sosreport/sos/archive/3.8.tar.gz
-Source0  : https://github.com/sosreport/sos/archive/3.8.tar.gz
+Version  : 4.6.0
+Release  : 45
+URL      : https://github.com/sosreport/sos/archive/4.6.0/sos-4.6.0.tar.gz
+Source0  : https://github.com/sosreport/sos/archive/4.6.0/sos-4.6.0.tar.gz
 Summary  : Script of Scripts (SoS): an interactive, cross-platform, and cross-language workflow system for reproducible data analysis
 Group    : Development/Tools
 License  : GPL-2.0 GPL-2.0+
 Requires: sos-bin = %{version}-%{release}
 Requires: sos-data = %{version}-%{release}
 Requires: sos-license = %{version}-%{release}
-Requires: sos-locales = %{version}-%{release}
 Requires: sos-man = %{version}-%{release}
 Requires: sos-python = %{version}-%{release}
 Requires: sos-python3 = %{version}-%{release}
 BuildRequires : buildreq-distutils3
 BuildRequires : pypi(coverage)
-BuildRequires : pypi(nose)
+BuildRequires : pypi(pexpect)
 BuildRequires : pypi(pycodestyle)
+BuildRequires : pypi(pyyaml)
+BuildRequires : pypi(setuptools)
 BuildRequires : pypi(sphinx)
-BuildRequires : pypi-six
 # Suppress stripping binaries
 %define __strip /bin/true
 %define debug_package %{nil}
-Patch1: 0001-Add-stateless-handling.patch
 
 %description
 Sos is a set of tools that gathers information about system
@@ -53,20 +52,21 @@ Group: Data
 data components for the sos package.
 
 
+%package doc
+Summary: doc components for the sos package.
+Group: Documentation
+Requires: sos-man = %{version}-%{release}
+
+%description doc
+doc components for the sos package.
+
+
 %package license
 Summary: license components for the sos package.
 Group: Default
 
 %description license
 license components for the sos package.
-
-
-%package locales
-Summary: locales components for the sos package.
-Group: Default
-
-%description locales
-locales components for the sos package.
 
 
 %package man
@@ -91,6 +91,7 @@ Summary: python3 components for the sos package.
 Group: Default
 Requires: python3-core
 Provides: pypi(sos)
+Requires: pypi(coverage)
 Requires: pypi(fasteners)
 Requires: pypi(jinja2)
 Requires: pypi(nbformat)
@@ -98,12 +99,15 @@ Requires: pypi(networkx)
 Requires: pypi(pexpect)
 Requires: pypi(psutil)
 Requires: pypi(ptyprocess)
+Requires: pypi(pycodestyle)
 Requires: pypi(pydot)
 Requires: pypi(pydotplus)
 Requires: pypi(pygments)
 Requires: pypi(pyyaml)
 Requires: pypi(pyzmq)
+Requires: pypi(setuptools)
 Requires: pypi(six)
+Requires: pypi(sphinx)
 Requires: pypi(tqdm)
 
 %description python3
@@ -111,11 +115,10 @@ python3 components for the sos package.
 
 
 %prep
-%setup -q -n sos-3.8
-cd %{_builddir}/sos-3.8
-%patch -P 1 -p1
+%setup -q -n sos-4.6.0
+cd %{_builddir}/sos-4.6.0
 pushd ..
-cp -a sos-3.8 buildavx2
+cp -a sos-4.6.0 buildavx2
 popd
 
 %build
@@ -123,7 +126,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1695930783
+export SOURCE_DATE_EPOCH=1695939257
 export GCC_IGNORE_WERROR=1
 CLEAR_INTERMEDIATE_CFLAGS="$CLEAR_INTERMEDIATE_CFLAGS -fdebug-types-section -femit-struct-debug-baseonly -fno-lto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
 CLEAR_INTERMEDIATE_FCFLAGS="$CLEAR_INTERMEDIATE_FFLAGS -fdebug-types-section -femit-struct-debug-baseonly -fno-lto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
@@ -175,7 +178,6 @@ FCFLAGS="$CLEAR_INTERMEDIATE_FCFLAGS -m64 -march=x86-64-v3 "
 LDFLAGS="$CLEAR_INTERMEDIATE_LDFLAGS -m64 -march=x86-64-v3 "
 python3 -tt setup.py build install --root=%{buildroot}-v3
 popd
-%find_lang sos
 ## install_append content
 install -D sos.conf %{buildroot}/usr/share/defaults/sos/sos.conf
 ## install_append end
@@ -183,14 +185,23 @@ install -D sos.conf %{buildroot}/usr/share/defaults/sos/sos.conf
 
 %files
 %defattr(-,root,root,-)
+/usr/config/sos.conf
+/usr/config/tmpfilesd-sos-rh.conf
 
 %files bin
 %defattr(-,root,root,-)
+/usr/bin/sos
+/usr/bin/sos-collector
 /usr/bin/sosreport
 
 %files data
 %defattr(-,root,root,-)
 /usr/share/defaults/sos/sos.conf
+/usr/share/licenses/sos/LICENSE
+
+%files doc
+%defattr(0644,root,root,0755)
+/usr/share/doc/sos/*
 
 %files license
 %defattr(0644,root,root,0755)
@@ -198,6 +209,13 @@ install -D sos.conf %{buildroot}/usr/share/defaults/sos/sos.conf
 
 %files man
 %defattr(0644,root,root,0755)
+/usr/share/man/man1/sos-clean.1
+/usr/share/man/man1/sos-collect.1
+/usr/share/man/man1/sos-collector.1
+/usr/share/man/man1/sos-help.1
+/usr/share/man/man1/sos-mask.1
+/usr/share/man/man1/sos-report.1
+/usr/share/man/man1/sos.1
 /usr/share/man/man1/sosreport.1
 /usr/share/man/man5/sos.conf.5
 
@@ -207,7 +225,3 @@ install -D sos.conf %{buildroot}/usr/share/defaults/sos/sos.conf
 %files python3
 %defattr(-,root,root,-)
 /usr/lib/python3*/*
-
-%files locales -f sos.lang
-%defattr(-,root,root,-)
-
