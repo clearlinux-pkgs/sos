@@ -7,7 +7,7 @@
 #
 Name     : sos
 Version  : 4.6.0
-Release  : 46
+Release  : 47
 URL      : https://github.com/sosreport/sos/archive/4.6.0/sos-4.6.0.tar.gz
 Source0  : https://github.com/sosreport/sos/archive/4.6.0/sos-4.6.0.tar.gz
 Summary  : Script of Scripts (SoS): an interactive, cross-platform, and cross-language workflow system for reproducible data analysis
